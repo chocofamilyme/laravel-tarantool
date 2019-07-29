@@ -1,5 +1,5 @@
 {
-    "name": "larabase-tarantool",
+    "name": "chocofamilyme/larabase-tarantool",
     "description": "Laravel Tarantool",
     "type": "library",
     "keywords": [
