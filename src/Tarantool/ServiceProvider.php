@@ -3,7 +3,6 @@
 namespace Chocofamily\Tarantool;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Jenssegers\Mongodb\Eloquent\Model;
 
 class ServiceProvider extends BaseServiceProvider
 {
