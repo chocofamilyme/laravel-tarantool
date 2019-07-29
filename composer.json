@@ -1,5 +1,5 @@
 {
-    "name": "kamenev/laravel-tarantool",
+    "name": "larabase-tarantool",
     "description": "Laravel Tarantool",
     "type": "library",
     "keywords": [
@@ -15,7 +15,7 @@
     "license": [
         "BSD-3-Clause"
     ],
-    "homepage": "https://github.com/kamenevn/laravel-tarantool",
+    "homepage": "https://github.com/chocofamilyme/larabase-tarantool",
     "authors": [
         {
             "name": "IT Chocolife.me",
@@ -30,8 +30,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Chocofamily\\Tarantool\\ServiceProvider",
-                "Chocofamily\\Tarantool\\QueueServiceProvider"
+                "Chocofamily\\Tarantool\\ServiceProvider"
             ]
         }
     }
