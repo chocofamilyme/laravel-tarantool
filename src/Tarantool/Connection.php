@@ -2,13 +2,13 @@
 
 namespace Chocofamily\Tarantool;
 
-use Illuminate\Database\Connection as BaseConnection;
-use Illuminate\Database\Query\Builder as Builder;
-use Illuminate\Database\Schema\Builder as SchemaBuilder;
 use Tarantool\Client\Client;
+use Chocofamily\Tarantool\Traits\Dsn;
 use Chocofamily\Tarantool\Traits\Query;
 use Chocofamily\Tarantool\Traits\Helper;
-use Chocofamily\Tarantool\Traits\Dsn;
+use Illuminate\Database\Query\Builder as Builder;
+use Illuminate\Database\Connection as BaseConnection;
+use Illuminate\Database\Schema\Builder as SchemaBuilder;
 
 class Connection extends BaseConnection
 {
