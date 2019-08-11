@@ -9,7 +9,10 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * Bootstrap the application events.
      */
-    public function boot() {}
+    public function boot() {
+        Model::setConnectionResolver($this->app['db']);
+        Model::setEventDispatcher($this->app['events']);
+    }
     /**
      * Register the service provider.
      */

@@ -6,6 +6,10 @@ use Tarantool\Client\Client;
 use Chocofamily\Tarantool\Traits\Dsn;
 use Chocofamily\Tarantool\Traits\Query;
 use Chocofamily\Tarantool\Traits\Helper;
+use Chocofamily\Tarantool\Query\Grammar as QGrammar;
+use Chocofamily\Tarantool\Query\Processor as QProcessor;
+use Chocofamily\Tarantool\Schema\Grammar as SGrammar;
+
 use Illuminate\Database\Query\Builder as Builder;
 use Illuminate\Database\Connection as BaseConnection;
 use Illuminate\Database\Schema\Builder as SchemaBuilder;
@@ -29,6 +33,10 @@ class Connection extends BaseConnection
     public function __construct(array $config)
     {
         $this->connection = $this->connect($config);
+
+        $this->useDefaultPostProcessor();
+        $this->useDefaultSchemaGrammar();
+        $this->useDefaultQueryGrammar();
     }
 
     public function connect(array $config)
@@ -54,6 +62,7 @@ class Connection extends BaseConnection
     {
         return $this->query()->from($table);
     }
+    
     /**
      * Get a new query builder instance.
      *
@@ -61,7 +70,7 @@ class Connection extends BaseConnection
      */
     public function query()
     {
-        return new Builder($this, $this->getPostProcessor(), $this->getSchemaGrammar());
+        return new Builder($this, $this->getDefaultQueryGrammar(), $this->getDefaultPostProcessor());
     }
 
     /**
@@ -115,5 +124,29 @@ class Connection extends BaseConnection
     public function getDriverName()
     {
         return 'tarantool';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getDefaultPostProcessor()
+    {
+        return new QProcessor();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getDefaultQueryGrammar()
+    {
+        return new QGrammar();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getDefaultSchemaGrammar()
+    {
+        return new SGrammar();
     }
 }
