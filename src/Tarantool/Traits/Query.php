@@ -2,6 +2,10 @@
 
 namespace Chocofamily\Tarantool\Traits;
 
+use Closure;
+use Exception;
+use Illuminate\Database\QueryException;
+
 trait Query
 {
     /**
@@ -14,7 +18,8 @@ trait Query
      */
     public function select($query, $bindings = [], $useReadPdo = true)
     {
-        return $this->executeQuery($query, $bindings, $useReadPdo)->getData();
+        $result = $this->executeQuery($query, $bindings, $useReadPdo);
+        return $this->getDataWithKeys($result->getData(), $result->keys);
     }
 
     /**
@@ -108,6 +113,40 @@ trait Query
     }
 
     /**
+     * Run a SQL statement.
+     *
+     * @param  string    $query
+     * @param  array     $bindings
+     * @param  \Closure  $callback
+     * @return mixed
+     *
+     * @throws \Illuminate\Database\QueryException
+     */
+    protected function runQueryCallback($query, $bindings, Closure $callback)
+    {
+        // To execute the statement, we'll simply call the callback, which will actually
+        // run the SQL against the PDO connection. Then we can calculate the time it
+        // took to execute and log the query SQL, bindings and time in our memory.
+        try {
+            //var_dump($query);
+            $result = $this->runQuery($this->getClient(), $query, $bindings);
+            //dd($this->getDataWithKeys($result->getData(), $result->keys));
+            //dd($result);
+        }
+
+            // If an exception occurs when attempting to run a query, we'll format the error
+            // message to include the bindings with SQL, which will make this exception a
+            // lot more helpful to the developer instead of just the database's errors.
+        catch (Exception $e) {
+            throw new QueryException(
+                $query, $this->prepareBindings($bindings), $e
+            );
+        }
+
+        return $result;
+    }
+
+    /**
      * Runs a SQL query
      *
      * @param \Tarantool\Client\Client $client
@@ -126,6 +165,17 @@ trait Query
             $result = $client->executeQuery($sql, ...$params);
         } else {
             $result = $client->executeUpdate($sql, ...$params);
+        }
+
+        return $result;
+    }
+
+    private function getDataWithKeys($data = [], $keys = []) : array
+    {
+        $result = [];
+
+        foreach ($data as $item) {
+            $result[] = array_combine($keys, $item);
         }
 
         return $result;

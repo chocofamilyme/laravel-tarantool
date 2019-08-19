@@ -2,7 +2,7 @@
 
 namespace Chocofamily\Tarantool;
 
-use Tarantool\Client\Client;
+use Tarantool\Client\Client as TarantoolClient;
 use Chocofamily\Tarantool\Traits\Dsn;
 use Chocofamily\Tarantool\Traits\Query;
 use Chocofamily\Tarantool\Traits\Helper;
@@ -10,7 +10,9 @@ use Chocofamily\Tarantool\Query\Grammar as QGrammar;
 use Chocofamily\Tarantool\Query\Processor as QProcessor;
 use Chocofamily\Tarantool\Schema\Grammar as SGrammar;
 
-use Illuminate\Database\Query\Builder as Builder;
+//use Illuminate\Database\Query\Builder as Builder;
+use Chocofamily\Tarantool\Query\Builder as Builder;
+
 use Illuminate\Database\Connection as BaseConnection;
 use Illuminate\Database\Schema\Builder as SchemaBuilder;
 
@@ -32,24 +34,27 @@ class Connection extends BaseConnection
      */
     public function __construct(array $config)
     {
-        $this->connection = $this->connect($config);
+        $this->config = $config;
+        $dsn = $this->getDsn($config);
+
+        $connection = $this->createConnection($dsn);
+
+        $this->setClient($connection);
 
         $this->useDefaultPostProcessor();
         $this->useDefaultSchemaGrammar();
         $this->useDefaultQueryGrammar();
     }
 
-    public function connect(array $config)
+    /**
+     * Create a new Tarantool connection.
+     *
+     * @param  string $dsn
+     * @return \Tarantool\Client\Client
+     */
+    protected function createConnection(string $dsn)
     {
-        $this->config = $config;
-
-        // Build the connection string
-        $dsn = $this->getDsn($config);
-
-        // Create the connection
-        $connection = $this->createConnection($dsn);
-
-        return $connection;
+        return TarantoolClient::fromDsn($dsn);
     }
 
     /**
@@ -82,6 +87,18 @@ class Connection extends BaseConnection
     }
 
     /**
+     * @param $connection
+     *
+     * @return self
+     */
+    public function setClient(TarantoolClient $connection): self
+    {
+        $this->connection = $connection;
+
+        return $this;
+    }
+
+    /**
      * return Tarantool object.
      *
      * @return \Tarantool\Client\Client
@@ -97,25 +114,6 @@ class Connection extends BaseConnection
     public function getDatabaseName()
     {
         return $this->config['database'];
-    }
-
-    /**
-     * Create a new Tarantool connection.
-     *
-     * @param  string $dsn
-     * @return \Tarantool\Client\Client
-     */
-    protected function createConnection(string $dsn)
-    {
-        return Client::fromDsn($dsn);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function disconnect()
-    {
-        unset($this->connection);
     }
 
     /**
