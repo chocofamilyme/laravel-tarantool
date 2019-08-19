@@ -48,14 +48,48 @@ class Grammar extends BaseGrammar
     private function autoAddPrimaryKey(array $columns)
     {
         if (!empty($columns)) {
-            $columns = implode(', ', $columns);
-            $searchPM = strripos($columns, 'PRIMARY KEY');
-            if ($searchPM === false) {
-                $searchID = strripos($columns, 'id');
-                if ($searchID != false) {
-                    $columns .= ', PRIMARY KEY ("id")';
+            $idColumnIndex = false;
+            $primaryKeyExist = false;
+            $autoIncrementExist = false;
+
+            foreach ($columns as $index => $column) {
+                if (!$primaryKeyExist) {
+                    $searchPM = strripos($column, 'PRIMARY KEY');
+                    if ($searchPM != false) {
+                        $primaryKeyExist = true;
+                    }
+                }
+
+                if (is_bool($idColumnIndex) and $idColumnIndex === false) {
+                    $searchID = strripos($column, '"id"');
+                    if ($searchID !== false) {
+                        $idColumnIndex = $index;
+                    }
+                }
+
+                if (!$autoIncrementExist) {
+                    $searchAutoIncrement = strripos($column, 'autoincrement');
+                    if ($searchAutoIncrement !== false) {
+                        $autoIncrementExist = true;
+                    }
                 }
             }
+
+            if (is_int($idColumnIndex) and $idColumnIndex !== false) {
+                $textToAdd = '';
+
+                if ($primaryKeyExist === false) {
+                    $textToAdd = $textToAdd . ' PRIMARY KEY';
+                }
+
+                if ($autoIncrementExist === false) {
+                    $textToAdd = $textToAdd . ' AUTOINCREMENT';
+                }
+
+                $columns[$idColumnIndex] = $columns[$idColumnIndex] . $textToAdd;
+            }
+
+            return implode(', ', $columns);
         }
 
         return $columns;
@@ -218,7 +252,7 @@ class Grammar extends BaseGrammar
      */
     protected function typeChar(Fluent $column)
     {
-        return 'VARCHAR';
+        return 'TEXT';
     }
 
     /**
@@ -240,7 +274,7 @@ class Grammar extends BaseGrammar
      */
     protected function typeText(Fluent $column)
     {
-        return 'STRING';
+        return 'TEXT';
     }
     /**
      * Create the column definition for a medium text type.
@@ -250,7 +284,7 @@ class Grammar extends BaseGrammar
      */
     protected function typeMediumText(Fluent $column)
     {
-        return 'STRING';
+        return 'TEXT';
     }
     /**
      * Create the column definition for a long text type.
@@ -360,7 +394,7 @@ class Grammar extends BaseGrammar
      */
     protected function typeEnum(Fluent $column)
     {
-        return 'VARCHAR';
+        return 'TEXT';
     }
     /**
      * Create the column definition for a json type.
@@ -380,7 +414,7 @@ class Grammar extends BaseGrammar
      */
     protected function typeDate(Fluent $column)
     {
-        return 'VARCHAR';
+        return 'VARCHAR (10)';
     }
     /**
      * Create the column definition for a date-time type.
@@ -390,7 +424,7 @@ class Grammar extends BaseGrammar
      */
     protected function typeDateTime(Fluent $column)
     {
-        return 'VARCHAR';
+        return 'VARCHAR (30)';
     }
     /**
      * Create the column definition for a time type.
@@ -400,7 +434,7 @@ class Grammar extends BaseGrammar
      */
     protected function typeTime(Fluent $column)
     {
-        return 'VARCHAR';
+        return 'VARCHAR (10)';
     }
     /**
      * Create the column definition for a timestamp type.
@@ -410,7 +444,7 @@ class Grammar extends BaseGrammar
      */
     protected function typeTimestamp(Fluent $column)
     {
-        return 'VARCHAR';
+        return 'VARCHAR (200)';
     }
     /**
      * Create the column definition for a binary type.
