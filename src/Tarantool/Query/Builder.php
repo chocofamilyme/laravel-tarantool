@@ -21,8 +21,6 @@ class Builder extends BaseBuilder
             $this->bindings['order'] = [];
         }
 
-        //dd($this->toSql());
-
         return $this;
     }
 
