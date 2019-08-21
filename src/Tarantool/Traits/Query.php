@@ -32,11 +32,7 @@ trait Query
     public function insert($query, $bindings = [])
     {
         $result = $this->executeQuery($query, $bindings);
-        if (!empty($result)) {
-            return false;
-        }
-
-        return true;
+        return $result;
     }
     /**
      * Run an update statement against the database.
@@ -48,12 +44,7 @@ trait Query
     public function update($query, $bindings = [])
     {
         $result = $this->executeQuery($query, $bindings);
-
-        if (!empty($result)) {
-            return false;
-        }
-
-        return true;
+        return $result;
     }
     /**
      * Run a delete statement against the database.
@@ -170,6 +161,11 @@ trait Query
         return $result;
     }
 
+    /**
+     * @param  array    $data
+     * @param  array    $keys
+     * @return array
+     */
     private function getDataWithKeys($data = [], $keys = []) : array
     {
         $result = [];

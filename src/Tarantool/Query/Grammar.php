@@ -27,6 +27,25 @@ class Grammar extends BaseGrammar
     }
 
     /**
+     * Wrap the given value segments.
+     *
+     * @param  array  $segments
+     * @return string
+     */
+    protected function wrapSegments($segments)
+    {
+        return collect($segments)->map(function ($segment, $key) use ($segments) {
+
+            if (count($segments) > 1) {
+                if ($key == 0) return $this->wrapTable($segment);
+                else return $this->addQuotes($segment);
+            } else {
+                return $this->wrapValue($segment);
+            }
+        })->implode('.');
+    }
+
+    /**
      * Wrap a single string in keyword identifiers.
      *
      * @param  string  $value
@@ -39,10 +58,19 @@ class Grammar extends BaseGrammar
         }
 
         if (in_array($value, $this->reservedWords)) {
-            return '"'.str_replace('"', '""', $value).'"';
+            return $this->addQuotes($value);
         }
 
         return str_replace('"', '""', $value);
+    }
+
+    protected function addQuotes(string $string): string
+    {
+        if ($string === '*') {
+            return $string;
+        }
+
+        return '"'.str_replace('"', '""', $string).'"';
     }
 
     /**
@@ -54,5 +82,49 @@ class Grammar extends BaseGrammar
     public function wrapTable($value)
     {
         return '"'.str_replace('"', '""', strtoupper($value)).'"';
+    }
+
+    /**
+     * Convert an array of column names into a delimited string.
+     *
+     * @param  array   $columns
+     * @return string
+     */
+    public function columnizeCustom(array $columns): string
+    {
+        $wrappedColumns = array_map([$this, 'wrap'], $columns);
+        array_walk($wrappedColumns, function(&$x) {$x = '"'.$x.'"';});
+
+        return implode(', ', $wrappedColumns);
+    }
+
+    /**
+     * Compile an insert statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $values
+     * @return string
+     */
+    public function compileInsert(Builder $query, array $values)
+    {
+        // Essentially we will force every insert to be treated as a batch insert which
+        // simply makes creating the SQL easier for us since we can utilize the same
+        // basic routine regardless of an amount of records given to us to insert.
+        $table = $this->wrapTable($query->from);
+
+        if (! is_array(reset($values))) {
+            $values = [$values];
+        }
+
+        $columns = $this->columnizeCustom(array_keys(reset($values)));
+
+        // We need to build a list of parameter place-holders of values that are bound
+        // to the query. Each insert should have the exact same amount of parameter
+        // bindings so we will loop through the record and parameterize them all.
+        $parameters = collect($values)->map(function ($record) {
+            return '('.$this->parameterize($record).')';
+        })->implode(', ');
+
+        return "insert into $table ($columns) values $parameters";
     }
 }
