@@ -16,7 +16,7 @@ trait Query
      * @param  bool  $useReadPdo
      * @return array
      */
-    public function select($query, $bindings = [], $useReadPdo = true)
+    public function select($query, $bindings = [], $useReadPdo = false)
     {
         $result = $this->executeQuery($query, $bindings, $useReadPdo);
         return $this->getDataWithKeys($result->getData(), $result->keys);
@@ -119,12 +119,8 @@ trait Query
         // run the SQL against the PDO connection. Then we can calculate the time it
         // took to execute and log the query SQL, bindings and time in our memory.
         try {
-            //var_dump($query);
             $result = $this->runQuery($this->getClient(), $query, $bindings);
-            //dd($this->getDataWithKeys($result->getData(), $result->keys));
-            //dd($result);
         }
-
             // If an exception occurs when attempting to run a query, we'll format the error
             // message to include the bindings with SQL, which will make this exception a
             // lot more helpful to the developer instead of just the database's errors.
@@ -151,7 +147,7 @@ trait Query
         if (!$operationType) {
             $operationType = $this->getSqlType($sql);
         }
-
+        
         if ($operationType == 'SELECT') {
             $result = $client->executeQuery($sql, ...$params);
         } else {
@@ -169,6 +165,10 @@ trait Query
     private function getDataWithKeys($data = [], $keys = []) : array
     {
         $result = [];
+
+        if (!empty($keys)) {
+            $keys = array_map('strtolower', $keys);
+        }
 
         foreach ($data as $item) {
             $result[] = array_combine($keys, $item);

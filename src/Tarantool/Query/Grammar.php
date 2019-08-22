@@ -38,7 +38,7 @@ class Grammar extends BaseGrammar
 
             if (count($segments) > 1) {
                 if ($key == 0) return $this->wrapTable($segment);
-                else return $this->addQuotes($segment);
+                else return strtoupper($this->addQuotes($segment));
             } else {
                 return $this->wrapValue($segment);
             }
