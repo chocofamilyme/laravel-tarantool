@@ -4,6 +4,7 @@ namespace Chocofamily\Tarantool\Query;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Grammars\Grammar as BaseGrammar;
+use Illuminate\Support\Str;
 
 class Grammar extends BaseGrammar
 {
@@ -93,7 +94,9 @@ class Grammar extends BaseGrammar
     public function columnizeCustom(array $columns): string
     {
         $wrappedColumns = array_map([$this, 'wrap'], $columns);
-        array_walk($wrappedColumns, function(&$x) {$x = '"'.$x.'"';});
+        array_walk($wrappedColumns, function(&$x) {
+            $x = Str::contains($x, '"') ? $x : '"'.$x.'"';
+        });
 
         return implode(', ', $wrappedColumns);
     }
