@@ -6,7 +6,7 @@
 Установка с помощью composer:
 
 ```
-composer require chocofamilyme/larabase-tarantool
+composer require chocofamilyme/laravel-tarantool
 ```
 
 Конфигурация

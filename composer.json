@@ -1,11 +1,14 @@
 {
-    "name": "chocofamilyme/larabase-tarantool",
-    "description": "Laravel Tarantool",
+    "name": "chocofamilyme/laravel-tarantool",
+    "description": "A Tarantool based Eloquent ORM and Query builder for Laravel",
     "type": "library",
     "keywords": [
         "db",
         "tarantool",
-        "laravel"
+        "laravel",
+        "eloquent-tarantool",
+        "eloquent",
+        "orm"
     ],
     "require": {
         "laravel/framework": "^5.8",
@@ -15,11 +18,11 @@
     "license": [
         "BSD-3-Clause"
     ],
-    "homepage": "https://github.com/chocofamilyme/larabase-tarantool",
+    "homepage": "https://github.com/chocofamilyme/laravel-tarantool",
     "authors": [
         {
-            "name": "IT Chocolife.me",
-            "homepage": "https://chocolife.me/"
+            "name": "IT Rahmet App",
+            "homepage": "https://rahmetapp.kz/"
         }
     ],
     "autoload": {
