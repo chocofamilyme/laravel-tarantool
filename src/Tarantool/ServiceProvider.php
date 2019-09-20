@@ -3,6 +3,7 @@
 namespace Chocofamily\Tarantool;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Chocofamily\Tarantool\Eloquent\Model;
 
 class ServiceProvider extends BaseServiceProvider
 {
