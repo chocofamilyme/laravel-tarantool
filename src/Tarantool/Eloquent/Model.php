@@ -17,7 +17,7 @@ abstract class Model extends BaseModel
      */
     public function getAttributeValue($key)
     {
-        $value = parent::getAttribute($key);
+        $value = parent::getAttributeValue($key);
 
         if (is_string($value) && strtolower($value) === 'null') {
             return null;

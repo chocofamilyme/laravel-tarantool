@@ -26,7 +26,7 @@ class Grammar extends BaseGrammar
     /**
      * Wrap a single string in keyword identifiers.
      *
-     * @param  string  $value
+     * @param  string  $table
      * @return string
      */
     public function wrapTable($table)
@@ -45,6 +45,10 @@ class Grammar extends BaseGrammar
         return "select * from \"_space\" where \"name\" = ?";
     }
 
+    /**
+     * @param array $columns
+     * @return array|string
+     */
     private function autoAddPrimaryKey(array $columns)
     {
         if (!empty($columns)) {
@@ -98,9 +102,9 @@ class Grammar extends BaseGrammar
     /**
      * Compile a create table command.
      *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Illuminate\Support\Fluent  $command
-     * @param  \Illuminate\Database\Connection  $connection
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Illuminate\Support\Fluent $command
+     * @param Connection $connection
      * @return string
      */
     public function compileCreate(Blueprint $blueprint, Fluent $command, Connection $connection)
@@ -239,10 +243,11 @@ class Grammar extends BaseGrammar
      */
     protected function modifyDefault(Blueprint $blueprint, Fluent $column)
     {
-        if ( ! is_null($column->default))
-        {
+        if ( ! is_null($column->default)) {
             return " default ".$this->getDefaultValue($column->default);
         }
+
+        return null;
     }
     /**
      * Create the column definition for a char type.
