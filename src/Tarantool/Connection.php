@@ -15,6 +15,7 @@ use Chocofamily\Tarantool\Query\Builder as Builder;
 
 use Illuminate\Database\Connection as BaseConnection;
 use Illuminate\Database\Schema\Builder as SchemaBuilder;
+use Tarantool\Client\SqlQueryResult;
 
 class Connection extends BaseConnection
 {
@@ -68,7 +69,22 @@ class Connection extends BaseConnection
     {
         return $this->query()->from($table);
     }
-    
+
+    /**
+     * @param string $query
+     * @param array $bindings
+     * @param bool $useReadPdo
+     * @return \Generator
+     * @throws \Exception
+     */
+    public function cursor($query, $bindings = [], $useReadPdo = true)
+    {
+        /** @var SqlQueryResult $result */
+        $result = $this->run($query, $bindings, function () {});
+
+        return $result->getIterator();
+    }
+
     /**
      * Get a new query builder instance.
      *
