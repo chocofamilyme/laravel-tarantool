@@ -79,8 +79,16 @@ class Connection extends BaseConnection
      */
     public function cursor($query, $bindings = [], $useReadPdo = true)
     {
-        /** @var SqlQueryResult $result */
-        $result = $this->run($query, $bindings, function () {});
+        /** @var SqlQueryResult $queryResult */
+        $queryResult = $this->run($query, $bindings, function () {});
+
+        $metaData = $queryResult->getMetadata();
+
+        array_walk_recursive($metaData, function (&$value) {
+            $value = strtolower($value);
+        });
+
+        $result = new SqlQueryResult($queryResult->getData(), $metaData);
 
         return $result->getIterator();
     }
