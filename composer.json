@@ -16,8 +16,8 @@
         "illuminate/container": "^5.8|^6.0",
         "illuminate/database": "^5.8|^6.0",
         "illuminate/events": "^5.8|^6.0",
-        "rybakit/msgpack": "^0.5.4",
-        "tarantool/client": "^0.5.2"
+        "rybakit/msgpack": "^0.7",
+        "tarantool/client": "^0.6.0"
     },
     "license": [
         "BSD-3-Clause"
