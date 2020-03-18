@@ -5,6 +5,8 @@ namespace Chocofamily\Tarantool\Traits;
 use Closure;
 use Exception;
 use Illuminate\Database\QueryException;
+use Tarantool\Client\Client;
+use Tarantool\Client\SqlQueryResult;
 
 trait Query
 {
@@ -18,8 +20,10 @@ trait Query
      */
     public function select($query, $bindings = [], $useReadPdo = false)
     {
+        /** @var SqlQueryResult $result */
         $result = $this->executeQuery($query, $bindings, $useReadPdo);
-        return $this->getDataWithKeys($result->getData(), $result->keys);
+
+        return $this->getDataWithKeys($result);
     }
 
     /**
@@ -27,36 +31,35 @@ trait Query
      *
      * @param  string  $query
      * @param  array   $bindings
-     * @return bool
+     * @return array
      */
     public function insert($query, $bindings = [])
     {
-        $result = $this->executeQuery($query, $bindings);
-        return $result;
+        return $this->executeQuery($query, $bindings);
     }
     /**
      * Run an update statement against the database.
      *
      * @param  string  $query
      * @param  array   $bindings
-     * @return int
+     * @return array
      */
     public function update($query, $bindings = [])
     {
-        $result = $this->executeQuery($query, $bindings);
-        return $result;
+        return $this->executeQuery($query, $bindings);
     }
     /**
      * Run a delete statement against the database.
      *
      * @param  string  $query
      * @param  array   $bindings
-     * @return int
+     * @return bool
      */
     public function delete($query, $bindings = [])
     {
+        /** @var SqlQueryResult $result */
         $result = $this->executeQuery($query, $bindings);
-        return ($result->count() != 0);
+        return $result->count() !== 0;
     }
 
     /**
@@ -111,7 +114,7 @@ trait Query
      * @param  \Closure  $callback
      * @return mixed
      *
-     * @throws \Illuminate\Database\QueryException
+     * @throws QueryException
      */
     protected function runQueryCallback($query, $bindings, Closure $callback)
     {
@@ -136,19 +139,19 @@ trait Query
     /**
      * Runs a SQL query
      *
-     * @param \Tarantool\Client\Client $client
-     * @param string $query
+     * @param Client $client
+     * @param string $sql
      * @param array $params
-     * @return \Tarantool\Client\SqlQueryResult
-     * @throws StorageModelException
+     * @param string $operationType
+     * @return SqlQueryResult
      */
-    private function runQuery(\Tarantool\Client\Client $client, string $sql, array $params, $operationType = '')
+    private function runQuery(Client $client, string $sql, array $params, $operationType = '')
     {
         if (!$operationType) {
             $operationType = $this->getSqlType($sql);
         }
-        
-        if ($operationType == 'SELECT') {
+
+        if ($operationType === 'SELECT') {
             $result = $client->executeQuery($sql, ...$params);
         } else {
             $result = $client->executeUpdate($sql, ...$params);
@@ -158,22 +161,15 @@ trait Query
     }
 
     /**
-     * @param  array    $data
-     * @param  array    $keys
+     * @param  SqlQueryResult $result
      * @return array
      */
-    private function getDataWithKeys($data = [], $keys = []) : array
+    private function getDataWithKeys(SqlQueryResult $result) : array
     {
-        $result = [];
+        $data = iterator_to_array($result);
 
-        if (!empty($keys)) {
-            $keys = array_map('strtolower', $keys);
-        }
-
-        foreach ($data as $item) {
-            $result[] = array_combine($keys, $item);
-        }
-
-        return $result;
+        return array_map(static function ($item) {
+            return array_change_key_case($item, CASE_LOWER);
+        }, $data);
     }
 }
