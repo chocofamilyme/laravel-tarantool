@@ -31,7 +31,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Chocofamily\\Tarantool\\": "src/"
+            "Chocofamily\\Tarantool\\": "src/Tarantool/"
         }
     },
     "extra": {
