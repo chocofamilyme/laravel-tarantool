@@ -44,5 +44,13 @@
                 "Chocofamily\\Tarantool\\ServiceProvider"
             ]
         }
+    },
+    "scripts": {
+        "test": [
+            "@test:style",
+            "@test:psalm"
+        ],
+        "test:style": "@php vendor/bin/php-cs-fixer",
+        "test:psalm": "@php vendor/bin/psalm"
     }
 }
