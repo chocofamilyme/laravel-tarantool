@@ -1,20 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\Tarantool;
 
-use Tarantool\Client\Client as TarantoolClient;
-use Chocofamily\Tarantool\Traits\Dsn;
-use Chocofamily\Tarantool\Traits\Query;
-use Chocofamily\Tarantool\Traits\Helper;
+use Chocofamily\Tarantool\Query\Builder;
 use Chocofamily\Tarantool\Query\Grammar as QGrammar;
 use Chocofamily\Tarantool\Query\Processor as QProcessor;
 use Chocofamily\Tarantool\Schema\Grammar as SGrammar;
-
-//use Illuminate\Database\Query\Builder as Builder;
-use Chocofamily\Tarantool\Query\Builder as Builder;
-
+use Chocofamily\Tarantool\Traits\Dsn;
+use Chocofamily\Tarantool\Traits\Helper;
+use Chocofamily\Tarantool\Traits\Query;
 use Illuminate\Database\Connection as BaseConnection;
 use Illuminate\Database\Schema\Builder as SchemaBuilder;
+use Tarantool\Client\Client as TarantoolClient;
 use Tarantool\Client\SqlQueryResult;
 
 class Connection extends BaseConnection
@@ -80,7 +79,8 @@ class Connection extends BaseConnection
     public function cursor($query, $bindings = [], $useReadPdo = true)
     {
         /** @var SqlQueryResult $queryResult */
-        $queryResult = $this->run($query, $bindings, function () {});
+        $queryResult = $this->run($query, $bindings, function () {
+        });
 
         $metaData = $queryResult->getMetadata();
 
@@ -104,7 +104,7 @@ class Connection extends BaseConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getSchemaBuilder()
     {
@@ -142,7 +142,7 @@ class Connection extends BaseConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDriverName()
     {
@@ -150,7 +150,7 @@ class Connection extends BaseConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getDefaultPostProcessor()
     {
@@ -158,7 +158,7 @@ class Connection extends BaseConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getDefaultQueryGrammar()
     {
@@ -166,7 +166,7 @@ class Connection extends BaseConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getDefaultSchemaGrammar()
     {

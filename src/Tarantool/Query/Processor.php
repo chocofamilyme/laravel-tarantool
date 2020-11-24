@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\Tarantool\Query;
 
-use \Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Processors\Processor as BaseProcessor;
 
 class Processor extends BaseProcessor

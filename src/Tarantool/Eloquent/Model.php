@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\Tarantool\Eloquent;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;

@@ -1,19 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\Tarantool;
 
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Chocofamily\Tarantool\Eloquent\Model;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
 {
     /**
      * Bootstrap the application events.
      */
-    public function boot() {
+    public function boot()
+    {
         Model::setConnectionResolver($this->app['db']);
         Model::setEventDispatcher($this->app['events']);
     }
+
     /**
      * Register the service provider.
      */
@@ -23,6 +27,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->app->resolving('db', function ($db) {
             $db->extend('tarantool', function ($config, $name) {
                 $config['name'] = $name;
+
                 return new Connection($config);
             });
         });

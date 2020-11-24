@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\Tarantool\Traits;
 
 use Closure;
@@ -37,6 +39,7 @@ trait Query
     {
         return $this->executeQuery($query, $bindings);
     }
+
     /**
      * Run an update statement against the database.
      *
@@ -48,6 +51,7 @@ trait Query
     {
         return $this->executeQuery($query, $bindings);
     }
+
     /**
      * Run a delete statement against the database.
      *
@@ -59,6 +63,7 @@ trait Query
     {
         /** @var SqlQueryResult $result */
         $result = $this->executeQuery($query, $bindings);
+
         return $result->count() !== 0;
     }
 
@@ -73,7 +78,7 @@ trait Query
         $class = $this;
         $client = $this->getClient();
 
-        return $this->run($query, [], function ($query) use($class, $client) {
+        return $this->run($query, [], function ($query) use ($class, $client) {
             if ($this->pretending()) {
                 return true;
             }
@@ -102,6 +107,7 @@ trait Query
             if ($this->pretending()) {
                 return [];
             }
+
             return $class->runQuery($client, $query, $bindings);
         });
     }
@@ -124,9 +130,9 @@ trait Query
         try {
             $result = $this->runQuery($this->getClient(), $query, $bindings);
         }
-            // If an exception occurs when attempting to run a query, we'll format the error
-            // message to include the bindings with SQL, which will make this exception a
-            // lot more helpful to the developer instead of just the database's errors.
+        // If an exception occurs when attempting to run a query, we'll format the error
+        // message to include the bindings with SQL, which will make this exception a
+        // lot more helpful to the developer instead of just the database's errors.
         catch (Exception $e) {
             throw new QueryException(
                 $query, $this->prepareBindings($bindings), $e
@@ -137,7 +143,7 @@ trait Query
     }
 
     /**
-     * Runs a SQL query
+     * Runs a SQL query.
      *
      * @param Client $client
      * @param string $sql
@@ -147,7 +153,7 @@ trait Query
      */
     private function runQuery(Client $client, string $sql, array $params, $operationType = '')
     {
-        if (!$operationType) {
+        if (! $operationType) {
             $operationType = $this->getSqlType($sql);
         }
 

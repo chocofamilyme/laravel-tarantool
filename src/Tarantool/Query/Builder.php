@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\Tarantool\Query;
 
 use Illuminate\Database\Query\Builder as BaseBuilder;
@@ -38,7 +40,7 @@ class Builder extends BaseBuilder
             ->setAggregate($function, $columns)
             ->get($columns);
 
-        if (! $results->isEmpty() and !empty($results[0])) {
+        if (! $results->isEmpty() && ! empty($results[0])) {
             return array_change_key_case((array) $results[0])['aggregate'];
         }
     }

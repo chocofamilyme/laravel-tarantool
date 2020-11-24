@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\Tarantool\Query;
 
 use Illuminate\Database\Query\Builder;
@@ -24,6 +26,7 @@ class Grammar extends BaseGrammar
     public function wrap($value, $prefixAlias = false)
     {
         $value = parent::wrap($value, $prefixAlias);
+
         return $value;
     }
 
@@ -36,10 +39,12 @@ class Grammar extends BaseGrammar
     protected function wrapSegments($segments)
     {
         return collect($segments)->map(function ($segment, $key) use ($segments) {
-
             if (count($segments) > 1) {
-                if ($key == 0) return $this->wrapTable($segment);
-                else return strtoupper($this->addQuotes($segment));
+                if ($key == 0) {
+                    return $this->wrapTable($segment);
+                } else {
+                    return strtoupper($this->addQuotes($segment));
+                }
             } else {
                 return $this->wrapValue($segment);
             }
@@ -94,7 +99,7 @@ class Grammar extends BaseGrammar
     public function columnizeCustom(array $columns): string
     {
         $wrappedColumns = array_map([$this, 'wrap'], $columns);
-        array_walk($wrappedColumns, function(&$x) {
+        array_walk($wrappedColumns, function (&$x) {
             $x = Str::contains($x, '"') ? $x : '"'.$x.'"';
         });
 
