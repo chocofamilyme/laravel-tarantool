@@ -1,24 +1,29 @@
-# laravel-tarantool
+# Laravel Tarantool
 
-Установка
+This package adds functionalities to the Eloquent model and Query builder for Tarantool, using the original Laravel API. *This library extends the original Laravel classes, so it uses exactly the same methods.*
+
+Installation
 ------------
+#### Laravel Version Compatibility
 
-Установка с помощью composer:
+Laravel  | Package
+:---------|:----------
+ 5.8.x    | 0.1.9
+ 6.x      | 0.1.9
+ 7.x      | 0.1.9
+ 8.x      | 1.x
+
+
+#### Via Composer
 
 ```
 composer require chocofamilyme/laravel-tarantool
 ```
 
-Конфигурация
+Configuration
 -------------
 
-Изменить стандартное подключение к базе в `config/database.php`:
-
-```php
-'default' => env('DB_CONNECTION', 'tarantool'),
-```
-
-Добавить конфигурацию подключения к Tarantool:
+You can use Tarantool either as the main database, either as a side database. To do so, add a new `tarantool` connection to `config/database.php`:
 
 ```php
 'tarantool' => [
@@ -38,7 +43,13 @@ composer require chocofamilyme/laravel-tarantool
 ],
 ```
 
-Можно подключить альтернативным способом через строку:
+Set tarantool as main database
+
+```php
+'default' => env('DB_CONNECTION', 'tarantool'),
+```
+
+You can also configure connection with dsn string:
 
 ```php
 'tarantool' => [
