@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Chocofamily\Tarantool\Schema;
 
-use Illuminate\Database\Schema\Grammars\Grammar as BaseGrammar;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Fluent;
 use Chocofamily\Tarantool\Connection;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Grammars\Grammar as BaseGrammar;
+use Illuminate\Support\Fluent;
 
 class Grammar extends BaseGrammar
 {
@@ -21,17 +23,18 @@ class Grammar extends BaseGrammar
      *
      * @var array
      */
-    protected $modifiers = array('Default', 'Nullable');
+    protected $modifiers = ['Default', 'Nullable'];
 
     /**
      * Wrap a single string in keyword identifiers.
      *
-     * @param  string  $table
+     * @param mixed $table
      * @return string
      */
     public function wrapTable($table)
     {
         $value = parent::wrapTable($table);
+
         return strtoupper($value);
     }
 
@@ -42,36 +45,37 @@ class Grammar extends BaseGrammar
      */
     public function compileTableExists()
     {
-        return "select * from \"_space\" where \"name\" = ?";
+        return 'select * from "_space" where "name" = ?';
     }
 
     /**
      * @param array $columns
-     * @return array|string
+     * @return string
+     * @psalm-suppress all
      */
     private function autoAddPrimaryKey(array $columns)
     {
-        if (!empty($columns)) {
+        if (! empty($columns)) {
             $idColumnIndex = false;
             $primaryKeyExist = false;
             $autoIncrementExist = false;
 
             foreach ($columns as $index => $column) {
-                if (!$primaryKeyExist) {
+                if (! $primaryKeyExist) {
                     $searchPM = strripos($column, 'PRIMARY KEY');
                     if ($searchPM != false) {
                         $primaryKeyExist = true;
                     }
                 }
 
-                if (is_bool($idColumnIndex) and $idColumnIndex === false) {
+                if (is_bool($idColumnIndex) && $idColumnIndex === false) {
                     $searchID = strripos($column, '"id"');
                     if ($searchID !== false) {
                         $idColumnIndex = $index;
                     }
                 }
 
-                if (!$autoIncrementExist) {
+                if (! $autoIncrementExist) {
                     $searchAutoIncrement = strripos($column, 'autoincrement');
                     if ($searchAutoIncrement !== false) {
                         $autoIncrementExist = true;
@@ -83,20 +87,18 @@ class Grammar extends BaseGrammar
                 $textToAdd = '';
 
                 if ($primaryKeyExist === false) {
-                    $textToAdd = $textToAdd . ' PRIMARY KEY';
+                    $textToAdd = $textToAdd.' PRIMARY KEY';
                 }
 
                 if ($autoIncrementExist === false) {
-                    $textToAdd = $textToAdd . ' AUTOINCREMENT';
+                    $textToAdd = $textToAdd.' AUTOINCREMENT';
                 }
 
-                $columns[$idColumnIndex] = $columns[$idColumnIndex] . $textToAdd;
+                $columns[$idColumnIndex] = $columns[$idColumnIndex].$textToAdd;
             }
-
-            return implode(', ', $columns);
         }
 
-        return $columns;
+        return implode(', ', $columns);
     }
 
     /**
@@ -111,8 +113,10 @@ class Grammar extends BaseGrammar
     {
         $columns = $this->autoAddPrimaryKey($this->getColumns($blueprint));
         $sql = 'CREATE TABLE IF NOT EXISTS '.$this->wrapTable($blueprint)." ($columns)";
+
         return $sql;
     }
+
     /**
      * Compile a drop table command.
      *
@@ -124,6 +128,7 @@ class Grammar extends BaseGrammar
     {
         return 'drop table '.$this->wrapTable($blueprint);
     }
+
     /**
      * Compile a primary key command.
      *
@@ -134,8 +139,10 @@ class Grammar extends BaseGrammar
     public function compilePrimary(Blueprint $blueprint, Fluent $command)
     {
         $command->name(null);
+
         return $this->compileKey($blueprint, $command, 'PRIMARY KEY');
     }
+
     /**
      * Compile a unique key command.
      *
@@ -147,8 +154,10 @@ class Grammar extends BaseGrammar
     {
         $columns = $this->columnize($command->columns);
         $table = $this->wrapTable($blueprint);
-        return "CREATE UNIQUE INDEX ".strtoupper(substr($command->index, 0, 31))." ON {$table} ($columns)";
+
+        return 'CREATE UNIQUE INDEX '.strtoupper(substr($command->index, 0, 31))." ON {$table} ($columns)";
     }
+
     /**
      * Compile a plain index key command.
      *
@@ -160,8 +169,10 @@ class Grammar extends BaseGrammar
     {
         $columns = $this->columnize($command->columns);
         $table = $this->wrapTable($blueprint);
-        return "CREATE INDEX ".strtoupper(substr($command->index, 0, 31))." ON {$table} ($columns)";
+
+        return 'CREATE INDEX '.strtoupper(substr($command->index, 0, 31))." ON {$table} ($columns)";
     }
+
     /**
      * Compile an index creation command.
      *
@@ -174,8 +185,10 @@ class Grammar extends BaseGrammar
     {
         $columns = $this->columnize($command->columns);
         $table = $this->wrapTable($blueprint);
+
         return "alter table {$table} add {$type} ($columns)";
     }
+
     /**
      * Compile a foreign key command.
      *
@@ -220,6 +233,7 @@ class Grammar extends BaseGrammar
     public function compileDropForeign(Blueprint $blueprint, Fluent $command)
     {
         $table = $this->wrapTable($blueprint);
+
         return "alter table {$table} drop constraint {$command->index}";
     }
 
@@ -234,6 +248,7 @@ class Grammar extends BaseGrammar
     {
         return $column->nullable ? '' : ' not null';
     }
+
     /**
      * Get the SQL for a default column modifier.
      *
@@ -243,12 +258,13 @@ class Grammar extends BaseGrammar
      */
     protected function modifyDefault(Blueprint $blueprint, Fluent $column)
     {
-        if ( ! is_null($column->default)) {
-            return " default ".$this->getDefaultValue($column->default);
+        if (! is_null($column->default)) {
+            return ' default '.$this->getDefaultValue($column->default);
         }
 
         return null;
     }
+
     /**
      * Create the column definition for a char type.
      *
@@ -281,6 +297,7 @@ class Grammar extends BaseGrammar
     {
         return 'TEXT';
     }
+
     /**
      * Create the column definition for a medium text type.
      *
@@ -291,6 +308,7 @@ class Grammar extends BaseGrammar
     {
         return 'TEXT';
     }
+
     /**
      * Create the column definition for a long text type.
      *
@@ -301,6 +319,7 @@ class Grammar extends BaseGrammar
     {
         return 'TEXT';
     }
+
     /**
      * Create the column definition for a integer type.
      *
@@ -311,6 +330,7 @@ class Grammar extends BaseGrammar
     {
         return 'INTEGER';
     }
+
     /**
      * Create the column definition for a big integer type.
      *
@@ -321,6 +341,7 @@ class Grammar extends BaseGrammar
     {
         return 'INTEGER';
     }
+
     /**
      * Create the column definition for a medium integer type.
      *
@@ -331,6 +352,7 @@ class Grammar extends BaseGrammar
     {
         return 'INTEGER';
     }
+
     /**
      * Create the column definition for a tiny integer type.
      *
@@ -341,6 +363,7 @@ class Grammar extends BaseGrammar
     {
         return 'INTEGER';
     }
+
     /**
      * Create the column definition for a small integer type.
      *
@@ -351,6 +374,7 @@ class Grammar extends BaseGrammar
     {
         return 'INTEGER';
     }
+
     /**
      * Create the column definition for a float type.
      *
@@ -361,6 +385,7 @@ class Grammar extends BaseGrammar
     {
         return 'NUMBER';
     }
+
     /**
      * Create the column definition for a double type.
      *
@@ -371,6 +396,7 @@ class Grammar extends BaseGrammar
     {
         return 'NUMBER';
     }
+
     /**
      * Create the column definition for a decimal type.
      *
@@ -381,6 +407,7 @@ class Grammar extends BaseGrammar
     {
         return 'NUMBER';
     }
+
     /**
      * Create the column definition for a boolean type.
      *
@@ -391,6 +418,7 @@ class Grammar extends BaseGrammar
     {
         return 'SCALAR';
     }
+
     /**
      * Create the column definition for an enum type.
      *
@@ -401,6 +429,7 @@ class Grammar extends BaseGrammar
     {
         return 'TEXT';
     }
+
     /**
      * Create the column definition for a json type.
      *
@@ -411,6 +440,7 @@ class Grammar extends BaseGrammar
     {
         return 'TEXT';
     }
+
     /**
      * Create the column definition for a date type.
      *
@@ -421,6 +451,7 @@ class Grammar extends BaseGrammar
     {
         return 'VARCHAR (10)';
     }
+
     /**
      * Create the column definition for a date-time type.
      *
@@ -431,6 +462,7 @@ class Grammar extends BaseGrammar
     {
         return 'VARCHAR (30)';
     }
+
     /**
      * Create the column definition for a time type.
      *
@@ -441,6 +473,7 @@ class Grammar extends BaseGrammar
     {
         return 'VARCHAR (10)';
     }
+
     /**
      * Create the column definition for a timestamp type.
      *
@@ -451,6 +484,7 @@ class Grammar extends BaseGrammar
     {
         return 'VARCHAR (200)';
     }
+
     /**
      * Create the column definition for a binary type.
      *

@@ -49,17 +49,16 @@ trait Dsn
     {
         $host = $config['host'];
 
-        if (strpos($host, ':') === false && !empty($config['port'])) {
-            $host = $host . ':' . $config['port'];
+        if (! empty($config['port']) && strpos($host, ':') === false) {
+            $host = $host.':'.$config['port'];
         }
 
-        $auth = $config['username'] . ':' . $config['password'];
+        $auth = $config['username'].':'.$config['password'];
 
-        $options = isset($config['options']) && !empty($config['options']) ? http_build_query($config['options'], null, '&') : null;
+        $options = isset($config['options']) && ! empty($config['options']) ? http_build_query($config['options'], '', '&') : null;
 
-        $optionConnectType = isset($config['type']) && !empty($config['type']);
-        $connType = (($optionConnectType || ($optionConnectType && in_array($config['type'], ['tcp', 'unix']))) ? $config['type'] : 'tcp');
+        $connType = isset($config['type']) && ! empty($config['type']) ? $config['type'] : 'tcp';
 
-        return $connType . '://' . $auth . '@' . $host . ($options ? '/?' . $options : '');
+        return $connType.'://'.$auth.'@'.$host.($options ? '/?'.$options : '');
     }
 }

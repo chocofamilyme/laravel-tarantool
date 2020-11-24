@@ -11,13 +11,17 @@
         "orm"
     ],
     "require": {
-        "php": "^7.2",
-        "illuminate/support": "^5.8|^6.0|^7.0",
-        "illuminate/container": "^5.8|^6.0|^7.0",
-        "illuminate/database": "^5.8|^6.0|^7.0",
-        "illuminate/events": "^5.8|^6.0|^7.0",
+        "php": "^7.3",
+        "illuminate/support": "^8.0",
+        "illuminate/container": "^8.0",
+        "illuminate/database": "^8.0",
+        "illuminate/events": "^8.0",
         "rybakit/msgpack": "^0.7",
-        "tarantool/client": "^0.6.0"
+        "tarantool/client": "^0.8.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "vimeo/psalm": "^4.1.0"
     },
     "license": [
         "BSD-3-Clause"
@@ -40,5 +44,13 @@
                 "Chocofamily\\Tarantool\\ServiceProvider"
             ]
         }
+    },
+    "scripts": {
+        "test": [
+            "@test:style",
+            "@test:psalm"
+        ],
+        "test:style": "@php vendor/bin/php-cs-fixer",
+        "test:psalm": "@php vendor/bin/psalm"
     }
 }
