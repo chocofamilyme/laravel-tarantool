@@ -11,6 +11,7 @@ trait Helper
      *
      * @param  string  $sql
      * @return string
+     * @psalm-suppress PossiblyFalseArgument
      */
     public function getSqlType(string $sql): string
     {

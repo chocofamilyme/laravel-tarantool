@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Tarantool\Client\Client;
 use Tarantool\Client\SqlQueryResult;
+use Tarantool\Client\SqlUpdateResult;
 
 trait Query
 {
@@ -34,6 +35,7 @@ trait Query
      * @param  string  $query
      * @param  array   $bindings
      * @return array
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public function insert($query, $bindings = [])
     {
@@ -43,9 +45,10 @@ trait Query
     /**
      * Run an update statement against the database.
      *
-     * @param  string  $query
-     * @param  array   $bindings
+     * @param string $query
+     * @param array $bindings
      * @return array
+     * @psalm-suppress ImplementedReturnTypeMismatch
      */
     public function update($query, $bindings = [])
     {
@@ -57,14 +60,14 @@ trait Query
      *
      * @param  string  $query
      * @param  array   $bindings
-     * @return bool
+     * @return int
      */
     public function delete($query, $bindings = [])
     {
         /** @var SqlQueryResult $result */
         $result = $this->executeQuery($query, $bindings);
 
-        return $result->count() !== 0;
+        return (int) ($result->count() !== 0);
     }
 
     /**
@@ -149,7 +152,7 @@ trait Query
      * @param string $sql
      * @param array $params
      * @param string $operationType
-     * @return SqlQueryResult
+     * @return SqlQueryResult|SqlUpdateResult
      */
     private function runQuery(Client $client, string $sql, array $params, $operationType = '')
     {

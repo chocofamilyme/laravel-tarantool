@@ -20,11 +20,7 @@ class Connection extends BaseConnection
 {
     use Dsn, Query, Helper;
 
-    /**
-     * The Tarantool connection handler.
-     *
-     * @var \Tarantool\Client\Client;
-     */
+    /** @var TarantoolClient */
     protected $connection;
 
     /**
@@ -50,7 +46,7 @@ class Connection extends BaseConnection
      * Create a new Tarantool connection.
      *
      * @param  string $dsn
-     * @return \Tarantool\Client\Client
+     * @return TarantoolClient
      */
     protected function createConnection(string $dsn)
     {
@@ -60,8 +56,8 @@ class Connection extends BaseConnection
     /**
      * Begin a fluent query against a database table.
      *
-     * @param  string $table
-     * @param null $as
+     * @param \Closure|\Illuminate\Database\Query\Builder|string $table
+     * @param string|null $as
      * @return \Illuminate\Database\Query\Builder
      */
     public function table($table, $as = null)
@@ -126,7 +122,7 @@ class Connection extends BaseConnection
     /**
      * return Tarantool object.
      *
-     * @return \Tarantool\Client\Client
+     * @return TarantoolClient
      */
     public function getClient()
     {

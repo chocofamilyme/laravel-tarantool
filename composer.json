@@ -20,7 +20,8 @@
         "tarantool/client": "^0.8.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.16"
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "vimeo/psalm": "^4.1.0"
     },
     "license": [
         "BSD-3-Clause"

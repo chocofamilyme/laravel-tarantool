@@ -14,8 +14,8 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        Model::setConnectionResolver($this->app['db']);
-        Model::setEventDispatcher($this->app['events']);
+        Model::setConnectionResolver($this->app->get('db'));
+        Model::setEventDispatcher($this->app->get('events'));
     }
 
     /**

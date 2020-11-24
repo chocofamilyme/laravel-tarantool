@@ -28,7 +28,7 @@ class Grammar extends BaseGrammar
     /**
      * Wrap a single string in keyword identifiers.
      *
-     * @param  string  $table
+     * @param mixed $table
      * @return string
      */
     public function wrapTable($table)
@@ -50,7 +50,8 @@ class Grammar extends BaseGrammar
 
     /**
      * @param array $columns
-     * @return array|string
+     * @return string
+     * @psalm-suppress all
      */
     private function autoAddPrimaryKey(array $columns)
     {
@@ -67,7 +68,7 @@ class Grammar extends BaseGrammar
                     }
                 }
 
-                if (is_bool($idColumnIndex) and $idColumnIndex === false) {
+                if (is_bool($idColumnIndex) && $idColumnIndex === false) {
                     $searchID = strripos($column, '"id"');
                     if ($searchID !== false) {
                         $idColumnIndex = $index;
@@ -95,11 +96,9 @@ class Grammar extends BaseGrammar
 
                 $columns[$idColumnIndex] = $columns[$idColumnIndex].$textToAdd;
             }
-
-            return implode(', ', $columns);
         }
 
-        return $columns;
+        return implode(', ', $columns);
     }
 
     /**
