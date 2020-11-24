@@ -123,7 +123,6 @@ $rules = [
     ],
     'whitespace_after_comma_in_array' => true,
     'no_unused_imports' => true,
-    'declare_strict_types' => true,
 ];
 
 $project_path = getcwd();
