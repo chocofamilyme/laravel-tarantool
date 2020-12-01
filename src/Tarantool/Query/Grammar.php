@@ -87,6 +87,9 @@ class Grammar extends BaseGrammar
      */
     public function wrapTable($value)
     {
+        if ($this->isExpression($value)) {
+            return parent::wrapTable($value);
+        }
         return '"'.str_replace('"', '""', strtoupper($value)).'"';
     }
 
