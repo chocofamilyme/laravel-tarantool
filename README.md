@@ -6,12 +6,13 @@ Installation
 ------------
 #### Laravel Version Compatibility
 
-Laravel  | Package
-:---------|:----------
- 5.8.x    | 0.1.9
- 6.x      | 0.1.9
- 7.x      | 0.1.9
- 8.x      | 1.x
+Laravel         | Package
+:---------------|:---------------
+ 5.8.x          | 0.1.9
+ 6.x            | 0.1.9
+ 7.x            | 0.1.9
+ 8.x            | 1.*
+ 8.x  + queue   | 1.1.*
 
 
 #### Via Composer
@@ -19,6 +20,28 @@ Laravel  | Package
 ```
 composer require chocofamilyme/laravel-tarantool
 ```
+
+### Laravel
+
+In case your Laravel version does NOT autoload the packages, add the service provider to `config/app.php`:
+
+```php
+Chocofamily\Tarantool\ServiceProvider::class,
+```
+
+### Lumen
+
+For usage with [Lumen](http://lumen.laravel.com), add the service provider in `bootstrap/app.php`. In this file, you will also need to enable Eloquent. You must however ensure that your call to `$app->withEloquent();` is **below** where you have registered the `ServiceProvider`:
+
+```php
+$app->register(Chocofamily\Tarantool\ServiceProvider::class);
+
+$app->withEloquent();
+```
+
+The service provider will register a Tarantool database extension with the original database manager. There is no need to register additional facades or objects.
+
+When using Tarantool connections, Laravel will automatically provide you with the corresponding Tarantool objects.
 
 Configuration
 -------------
@@ -57,4 +80,56 @@ You can also configure connection with dsn string:
     'dsn' => env('DB_DSN'),
     'database' => env('DB_DATABASE'),
 ],
+```
+
+### Queues
+If you want to use Tarantool as your database backend, change the driver in `config/queue.php`:
+
+```php
+'connections' => [
+    'database' => [
+        'driver' => 'tarantool',
+        'table' => 'jobs',
+        'queue' => 'default',
+        'expire' => 60,
+    ],
+],
+```
+Also you need run the console command:
+```
+php artisan queue:tarantool-function
+```
+This command create migration file with some Tarantool function.
+**You need apply this migration!**
+
+If you want to use Tarantool to handle failed jobs, change the database in `config/queue.php` and add the service provider:
+```php
+Chocofamily\Tarantool\TarantoolQueueServiceProvider::class,
+```
+
+```php
+'failed' => [
+    'driver' => 'tarantool',
+    // You can also specify your jobs specific database created on config/database.php
+    'database' => 'tarantool',
+    'table' => 'failed_jobs',
+],
+```
+
+#### Laravel specific
+
+Add the service provider in `config/app.php`:
+
+```php
+Chocofamily\Tarantool\TarantoolQueueServiceProvider::class,
+```
+
+#### Lumen specific
+
+With [Lumen](http://lumen.laravel.com), add the service provider in `bootstrap/app.php`. You must however ensure that you add the following **after** the `TarantoolQueueServiceProvider` registration.
+
+```php
+$app->make('queue');
+
+$app->register(Chocofamily\Tarantool\TarantoolQueueServiceProvider::class);
 ```

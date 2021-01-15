@@ -15,6 +15,7 @@
         "illuminate/support": "^8.0",
         "illuminate/container": "^8.0",
         "illuminate/database": "^8.0",
+        "illuminate/queue": "^8.0",
         "illuminate/events": "^8.0",
         "rybakit/msgpack": "^0.7",
         "tarantool/client": "^0.8.0"
@@ -41,7 +42,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Chocofamily\\Tarantool\\ServiceProvider"
+                "Chocofamily\\Tarantool\\ServiceProvider",
+                "Chocofamily\\Tarantool\\TarantoolQueueServiceProvider"
             ]
         }
     },

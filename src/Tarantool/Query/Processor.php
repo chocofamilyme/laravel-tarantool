@@ -11,13 +11,7 @@ use Tarantool\Client\SqlUpdateResult;
 class Processor extends BaseProcessor
 {
     /**
-     * Process an  "insert get ID" query.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  string  $sql
-     * @param  array   $values
-     * @param  string|null  $sequence
-     * @return int
+     * @inheritDoc
      */
     public function processInsertGetId(Builder $query, $sql, $values, $sequence = null)
     {

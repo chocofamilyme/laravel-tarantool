@@ -1,0 +1,49 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+
+class Create{{className}}Function extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        $body = <<<'LUA'
+function(sqlQuery, reserved_at)
+    box.execute([[START TRANSACTION]])
+    local result = box.execute(sqlQuery)
+    if table.getn(result.rows) > 0 then
+        local data = {}
+        local rows = result.rows[1]:tomap()
+        for v=1, #result.metadata do
+            data[result.metadata[v]['name']] = rows[v]
+        end
+        box.execute([[UPDATE "{{table}}" SET "reserved_at" = :reserved_at, "attempts" = "attempts" + 1 WHERE "id" = :id]], {{[':reserved_at']=reserved_at},{[':id']=data['id']}})
+        box.execute([[COMMIT]])
+        return data
+    end
+    box.execute([[COMMIT]])
+    return {}
+end
+LUA;
+        DB::connection('tarantool')->getClient()->call(
+            'box.schema.func.create',
+            '{{functionName}}',
+            ['if_not_exists' => true, 'body' => $body]
+        );
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        DB::connection('tarantool')->getClient()->call('box.schema.func.drop', '{{functionName}}');
+    }
+}
