@@ -6,7 +6,6 @@ namespace Chocofamily\Tarantool\Queue;
 
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Queue\Connectors\ConnectorInterface;
-use Illuminate\Support\Arr;
 
 class TarantoolConnector implements ConnectorInterface
 {
@@ -31,10 +30,10 @@ class TarantoolConnector implements ConnectorInterface
     public function connect(array $config)
     {
         return new TarantoolQueue(
-            $this->connections->connection(Arr::get($config, 'connection')),
+            $this->connections->connection($config['connection'] ?? null),
             $config['table'],
             $config['queue'],
-            Arr::get($config, 'expire', 60)
+            $config['retry_after'] ?? 60
         );
     }
 }
