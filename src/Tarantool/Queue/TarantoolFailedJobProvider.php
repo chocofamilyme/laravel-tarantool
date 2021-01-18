@@ -18,4 +18,13 @@ class TarantoolFailedJobProvider extends DatabaseFailedJobProvider
         $exception = (string) $exception;
         $this->getTable()->insert(compact('connection', 'queue', 'payload', 'failed_at', 'exception'));
     }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function find($id)
+    {
+        return (object)parent::find($id);
+    }
 }
