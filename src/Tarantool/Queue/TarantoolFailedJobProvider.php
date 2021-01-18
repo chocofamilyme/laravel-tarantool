@@ -15,7 +15,7 @@ class TarantoolFailedJobProvider extends DatabaseFailedJobProvider
     public function log($connection, $queue, $payload, $exception)
     {
         $failed_at = Carbon::now()->timestamp;
-        $exception = (string) $exception;
+        $exception = (string)$exception;
         $this->getTable()->insert(compact('connection', 'queue', 'payload', 'failed_at', 'exception'));
     }
 

@@ -16,9 +16,9 @@ trait Query
     /**
      * Run a select statement against the database.
      *
-     * @param  string  $query
-     * @param  array  $bindings
-     * @param  bool  $useReadPdo
+     * @param string $query
+     * @param array $bindings
+     * @param bool $useReadPdo
      * @return array
      */
     public function select($query, $bindings = [], $useReadPdo = false)
@@ -32,8 +32,8 @@ trait Query
     /**
      * Run an insert statement against the database.
      *
-     * @param  string  $query
-     * @param  array   $bindings
+     * @param string $query
+     * @param array $bindings
      * @return array
      * @psalm-suppress ImplementedReturnTypeMismatch
      */
@@ -58,8 +58,8 @@ trait Query
     /**
      * Run a delete statement against the database.
      *
-     * @param  string  $query
-     * @param  array   $bindings
+     * @param string $query
+     * @param array $bindings
      * @return int
      */
     public function delete($query, $bindings = [])
@@ -67,13 +67,13 @@ trait Query
         /** @var SqlQueryResult $result */
         $result = $this->executeQuery($query, $bindings);
 
-        return (int) ($result->count() !== 0);
+        return (int)($result->count() !== 0);
     }
 
     /**
      * Run a raw, unprepared query against the PDO connection.
      *
-     * @param  string  $query
+     * @param string $query
      * @return bool
      */
     public function unprepared($query)
@@ -96,9 +96,9 @@ trait Query
     /**
      * Run query.
      *
-     * @param  string  $query
-     * @param  array  $bindings
-     * @param  bool  $useReadPdo
+     * @param string $query
+     * @param array $bindings
+     * @param bool $useReadPdo
      * @return array
      */
     public function executeQuery(string $query, array $bindings, bool $useReadPdo = false)
@@ -118,9 +118,9 @@ trait Query
     /**
      * Run a SQL statement.
      *
-     * @param  string    $query
-     * @param  array     $bindings
-     * @param  \Closure  $callback
+     * @param string $query
+     * @param array $bindings
+     * @param \Closure $callback
      * @return mixed
      *
      * @throws QueryException
@@ -133,9 +133,9 @@ trait Query
         try {
             $result = $this->runQuery($this->getClient(), $query, $bindings);
         }
-        // If an exception occurs when attempting to run a query, we'll format the error
-        // message to include the bindings with SQL, which will make this exception a
-        // lot more helpful to the developer instead of just the database's errors.
+            // If an exception occurs when attempting to run a query, we'll format the error
+            // message to include the bindings with SQL, which will make this exception a
+            // lot more helpful to the developer instead of just the database's errors.
         catch (Exception $e) {
             throw new QueryException(
                 $query, $this->prepareBindings($bindings), $e
@@ -156,7 +156,7 @@ trait Query
      */
     private function runQuery(Client $client, string $sql, array $params, $operationType = '')
     {
-        if (! $operationType) {
+        if (!$operationType) {
             $operationType = $this->getSqlType($sql);
         }
 
@@ -170,10 +170,10 @@ trait Query
     }
 
     /**
-     * @param  SqlQueryResult $result
+     * @param SqlQueryResult $result
      * @return array
      */
-    private function getDataWithKeys(SqlQueryResult $result) : array
+    private function getDataWithKeys(SqlQueryResult $result): array
     {
         $data = iterator_to_array($result);
 

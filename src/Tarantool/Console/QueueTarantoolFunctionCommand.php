@@ -75,13 +75,13 @@ class QueueTarantoolFunctionCommand extends Command
     /**
      * Create a base migration file for the function.
      *
-     * @param  string  $functionName
+     * @param string $functionName
      * @return string
      */
-    protected function createBaseMigration($functionName)
+    protected function createBaseMigration(string $functionName)
     {
         return $this->laravel['migration.creator']->create(
-            'create_'.$functionName.'_function', $this->laravel->databasePath().'/migrations'
+            'create_' . $functionName . '_function', $this->laravel->databasePath() . '/migrations'
         );
     }
 
@@ -94,12 +94,12 @@ class QueueTarantoolFunctionCommand extends Command
      * @return void
      * @throws FileNotFoundException
      */
-    protected function replaceMigration($path, $functionName, $className)
+    protected function replaceMigration(string $path, string $functionName, string $className)
     {
         $stub = str_replace(
             ['{{functionName}}', '{{className}}', '{{table}}'],
             [$functionName, $className, strtoupper($this->laravel['config']['queue.connections.database.table'])],
-            $this->files->get(__DIR__.'/stubs/function.stub')
+            $this->files->get(__DIR__ . '/stubs/function.stub')
         );
 
         $this->files->put($path, $stub);

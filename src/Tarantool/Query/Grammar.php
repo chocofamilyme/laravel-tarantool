@@ -78,7 +78,7 @@ class Grammar extends BaseGrammar
         if ($this->isExpression($value)) {
             return parent::wrapTable($value);
         }
-        return '"'.str_replace('"', '""', strtoupper($value)).'"';
+        return '"' . str_replace('"', '""', strtoupper($value)) . '"';
     }
 
     /**
@@ -91,7 +91,7 @@ class Grammar extends BaseGrammar
         // basic routine regardless of an amount of records given to us to insert.
         $table = $this->wrapTable($query->from);
 
-        if (! is_array(reset($values))) {
+        if (!is_array(reset($values))) {
             $values = [$values];
         }
 
@@ -101,7 +101,7 @@ class Grammar extends BaseGrammar
         // to the query. Each insert should have the exact same amount of parameter
         // bindings so we will loop through the record and parameterize them all.
         $parameters = collect($values)->map(function ($record) {
-            return '('.$this->parameterize($record).')';
+            return '(' . $this->parameterize($record) . ')';
         })->implode(', ');
 
         return "insert into $table ($columns) values $parameters";
@@ -110,14 +110,14 @@ class Grammar extends BaseGrammar
     /**
      * Convert an array of column names into a delimited string.
      *
-     * @param  array   $columns
+     * @param array $columns
      * @return string
      */
     private function columnizeCustom(array $columns): string
     {
         $wrappedColumns = array_map([$this, 'wrap'], $columns);
         array_walk($wrappedColumns, function (&$x) {
-            $x = Str::contains($x, '"') ? $x : '"'.$x.'"';
+            $x = Str::contains($x, '"') ? $x : '"' . $x . '"';
         });
 
         return implode(', ', $wrappedColumns);
@@ -134,6 +134,6 @@ class Grammar extends BaseGrammar
             return $string;
         }
 
-        return '"'.str_replace('"', '""', $string).'"';
+        return '"' . str_replace('"', '""', $string) . '"';
     }
 }

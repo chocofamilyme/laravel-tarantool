@@ -13,18 +13,6 @@ use Illuminate\Queue\Jobs\DatabaseJobRecord;
 class TarantoolQueue extends DatabaseQueue
 {
     /**
-     * The expiration time of a job.
-     * @var int|null
-     */
-    protected $retryAfter = 60;
-
-    /**
-     * The connection name for the queue.
-     * @var string
-     */
-    protected $connectionName;
-
-    /**
      * @inheritdoc
      */
     public function __construct(Connection $database, $table, $default = 'default', $retryAfter = 60)
@@ -64,7 +52,7 @@ class TarantoolQueue extends DatabaseQueue
         $job = $this->database->getClient()->call('box.func.get_active_job:call', [$this->getRealSql($builder), Carbon::now()->timestamp]);
         $job = array_pop($job);
 
-        return $job ? new DatabaseJobRecord((object) $job) : null;
+        return $job ? new DatabaseJobRecord((object)$job) : null;
     }
 
     /**
@@ -104,7 +92,7 @@ class TarantoolQueue extends DatabaseQueue
     {
         $sql = $builder->toSql();
         foreach ($builder->getBindings() as $binding) {
-            $value = is_numeric($binding) ? $binding : "'".$binding."'";
+            $value = is_numeric($binding) ? $binding : "'" . $binding . "'";
             $sql = preg_replace('/\?/', $value, $sql, 1);
         }
 

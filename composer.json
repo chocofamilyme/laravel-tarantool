@@ -1,58 +1,58 @@
 {
-    "name": "chocofamilyme/laravel-tarantool",
-    "description": "A Tarantool based Eloquent ORM and Query builder for Laravel",
-    "type": "library",
-    "keywords": [
-        "db",
-        "tarantool",
-        "laravel",
-        "eloquent-tarantool",
-        "eloquent",
-        "orm"
-    ],
-    "require": {
-        "php": "^7.3",
-        "illuminate/support": "^8.0",
-        "illuminate/container": "^8.0",
-        "illuminate/database": "^8.0",
-        "illuminate/queue": "^8.0",
-        "illuminate/events": "^8.0",
-        "rybakit/msgpack": "^0.7",
-        "tarantool/client": "^0.8.0"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.16",
-        "vimeo/psalm": "^4.1.0"
-    },
-    "license": [
-        "BSD-3-Clause"
-    ],
-    "homepage": "https://github.com/chocofamilyme/laravel-tarantool",
-    "authors": [
-        {
-            "name": "IT Rahmet App",
-            "homepage": "https://rahmetapp.kz/"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Chocofamily\\Tarantool\\": "src/Tarantool/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Chocofamily\\Tarantool\\ServiceProvider",
-                "Chocofamily\\Tarantool\\TarantoolQueueServiceProvider"
-            ]
-        }
-    },
-    "scripts": {
-        "test": [
-            "@test:style",
-            "@test:psalm"
-        ],
-        "test:style": "@php vendor/bin/php-cs-fixer",
-        "test:psalm": "@php vendor/bin/psalm"
+  "name": "chocofamilyme/laravel-tarantool",
+  "description": "A Tarantool based Eloquent ORM and Query builder for Laravel",
+  "type": "library",
+  "keywords": [
+    "db",
+    "tarantool",
+    "laravel",
+    "eloquent-tarantool",
+    "eloquent",
+    "orm"
+  ],
+  "require": {
+    "php": "^7.3",
+    "illuminate/support": "^8.0",
+    "illuminate/container": "^8.0",
+    "illuminate/database": "^8.0",
+    "illuminate/queue": "^8.0",
+    "illuminate/events": "^8.0",
+    "rybakit/msgpack": "^0.7",
+    "tarantool/client": "^0.8.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.16",
+    "vimeo/psalm": "^4.1.0"
+  },
+  "license": [
+    "BSD-3-Clause"
+  ],
+  "homepage": "https://github.com/chocofamilyme/laravel-tarantool",
+  "authors": [
+    {
+      "name": "IT Rahmet App",
+      "homepage": "https://rahmetapp.kz/"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Chocofamily\\Tarantool\\": "src/Tarantool/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Chocofamily\\Tarantool\\ServiceProvider",
+        "Chocofamily\\Tarantool\\TarantoolQueueServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "test": [
+      "@test:style",
+      "@test:psalm"
+    ],
+    "test:style": "@php vendor/bin/php-cs-fixer",
+    "test:psalm": "@php vendor/bin/psalm"
+  }
 }

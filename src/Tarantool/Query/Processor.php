@@ -19,6 +19,6 @@ class Processor extends BaseProcessor
         $result = $query->getConnection()->insert($sql, $values);
         $id = $result->getAutoincrementIds()[0];
 
-        return is_numeric($id) ? (int) $id : $id;
+        return is_numeric($id) ? (int)$id : $id;
     }
 }

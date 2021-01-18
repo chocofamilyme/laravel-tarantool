@@ -11,8 +11,10 @@ use Chocofamily\Tarantool\Schema\Grammar as SGrammar;
 use Chocofamily\Tarantool\Traits\Dsn;
 use Chocofamily\Tarantool\Traits\Helper;
 use Chocofamily\Tarantool\Traits\Query;
+use Closure;
 use Illuminate\Database\Connection as BaseConnection;
 use Illuminate\Database\Schema\Builder as SchemaBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Tarantool\Client\Client as TarantoolClient;
 use Tarantool\Client\SqlQueryResult;
 
@@ -26,7 +28,7 @@ class Connection extends BaseConnection
     /**
      * Create a new database connection instance.
      *
-     * @param  array $config
+     * @param array $config
      */
     public function __construct(array $config)
     {
@@ -45,7 +47,7 @@ class Connection extends BaseConnection
     /**
      * Create a new Tarantool connection.
      *
-     * @param  string $dsn
+     * @param string $dsn
      * @return TarantoolClient
      */
     protected function createConnection(string $dsn)
@@ -56,9 +58,9 @@ class Connection extends BaseConnection
     /**
      * Begin a fluent query against a database table.
      *
-     * @param \Closure|\Illuminate\Database\Query\Builder|string $table
+     * @param Closure|QueryBuilder|string $table
      * @param string|null $as
-     * @return \Illuminate\Database\Query\Builder
+     * @return QueryBuilder
      */
     public function table($table, $as = null)
     {
@@ -92,7 +94,7 @@ class Connection extends BaseConnection
     /**
      * Get a new query builder instance.
      *
-     * @return \Illuminate\Database\Query\Builder
+     * @return QueryBuilder
      */
     public function query()
     {

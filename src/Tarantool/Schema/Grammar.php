@@ -55,13 +55,13 @@ class Grammar extends BaseGrammar
      */
     private function autoAddPrimaryKey(array $columns)
     {
-        if (! empty($columns)) {
+        if (!empty($columns)) {
             $idColumnIndex = false;
             $primaryKeyExist = false;
             $autoIncrementExist = false;
 
             foreach ($columns as $index => $column) {
-                if (! $primaryKeyExist) {
+                if (!$primaryKeyExist) {
                     $searchPM = strripos($column, 'PRIMARY KEY');
                     if ($searchPM != false) {
                         $primaryKeyExist = true;
@@ -75,7 +75,7 @@ class Grammar extends BaseGrammar
                     }
                 }
 
-                if (! $autoIncrementExist) {
+                if (!$autoIncrementExist) {
                     $searchAutoIncrement = strripos($column, 'autoincrement');
                     if ($searchAutoIncrement !== false) {
                         $autoIncrementExist = true;
@@ -87,14 +87,14 @@ class Grammar extends BaseGrammar
                 $textToAdd = '';
 
                 if ($primaryKeyExist === false) {
-                    $textToAdd = $textToAdd.' PRIMARY KEY';
+                    $textToAdd = $textToAdd . ' PRIMARY KEY';
                 }
 
                 if ($autoIncrementExist === false) {
-                    $textToAdd = $textToAdd.' AUTOINCREMENT';
+                    $textToAdd = $textToAdd . ' AUTOINCREMENT';
                 }
 
-                $columns[$idColumnIndex] = $columns[$idColumnIndex].$textToAdd;
+                $columns[$idColumnIndex] = $columns[$idColumnIndex] . $textToAdd;
             }
         }
 
@@ -112,7 +112,7 @@ class Grammar extends BaseGrammar
     public function compileCreate(Blueprint $blueprint, Fluent $command, Connection $connection)
     {
         $columns = $this->autoAddPrimaryKey($this->getColumns($blueprint));
-        $sql = 'CREATE TABLE IF NOT EXISTS '.$this->wrapTable($blueprint)." ($columns)";
+        $sql = 'CREATE TABLE IF NOT EXISTS ' . $this->wrapTable($blueprint) . " ($columns)";
 
         return $sql;
     }
@@ -126,7 +126,7 @@ class Grammar extends BaseGrammar
      */
     public function compileDrop(Blueprint $blueprint, Fluent $command)
     {
-        return 'drop table '.$this->wrapTable($blueprint);
+        return 'drop table ' . $this->wrapTable($blueprint);
     }
 
     /**
@@ -155,7 +155,7 @@ class Grammar extends BaseGrammar
         $columns = $this->columnize($command->columns);
         $table = $this->wrapTable($blueprint);
 
-        return 'CREATE UNIQUE INDEX '.strtoupper(substr($command->index, 0, 31))." ON {$table} ($columns)";
+        return 'CREATE UNIQUE INDEX ' . strtoupper(substr($command->index, 0, 31)) . " ON {$table} ($columns)";
     }
 
     /**
@@ -170,7 +170,7 @@ class Grammar extends BaseGrammar
         $columns = $this->columnize($command->columns);
         $table = $this->wrapTable($blueprint);
 
-        return 'CREATE INDEX '.strtoupper(substr($command->index, 0, 31))." ON {$table} ($columns)";
+        return 'CREATE INDEX ' . strtoupper(substr($command->index, 0, 31)) . " ON {$table} ($columns)";
     }
 
     /**
@@ -178,7 +178,7 @@ class Grammar extends BaseGrammar
      *
      * @param Blueprint $blueprint
      * @param Fluent $command
-     * @param  string  $type
+     * @param string $type
      * @return string
      */
     protected function compileKey(Blueprint $blueprint, Fluent $command, $type)
@@ -258,8 +258,8 @@ class Grammar extends BaseGrammar
      */
     protected function modifyDefault(Blueprint $blueprint, Fluent $column)
     {
-        if (! is_null($column->default)) {
-            return ' default '.$this->getDefaultValue($column->default);
+        if (!is_null($column->default)) {
+            return ' default ' . $this->getDefaultValue($column->default);
         }
 
         return null;
@@ -284,7 +284,7 @@ class Grammar extends BaseGrammar
      */
     protected function typeString(Fluent $column)
     {
-        return 'VARCHAR ('.$column->length.')';
+        return 'VARCHAR (' . $column->length . ')';
     }
 
     /**
