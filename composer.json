@@ -42,8 +42,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Chocofamily\\Tarantool\\ServiceProvider",
-        "Chocofamily\\Tarantool\\TarantoolQueueServiceProvider"
+        "Chocofamily\\Tarantool\\ServiceProvider"
       ]
     }
   },
