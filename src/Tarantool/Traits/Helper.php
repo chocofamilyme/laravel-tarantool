@@ -9,7 +9,7 @@ trait Helper
     /**
      * Get type of SQL query.
      *
-     * @param  string  $sql
+     * @param string $sql
      * @return string
      * @psalm-suppress PossiblyFalseArgument
      */
