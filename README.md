@@ -120,3 +120,9 @@ If you want to use Tarantool to handle failed jobs, change the database in `conf
     'table' => 'failed_jobs',
 ],
 ```
+
+and register the service provider:
+
+```php
+Chocofamily\Tarantool\TarantoolQueueServiceProvider::class,
+```
