@@ -11,13 +11,13 @@
         "orm"
     ],
     "require": {
-        "php": "^7.3",
+        "php": "^7.3|^8.0",
         "illuminate/support": "^8.0",
         "illuminate/container": "^8.0",
         "illuminate/database": "^8.0",
         "illuminate/events": "^8.0",
         "rybakit/msgpack": "^0.7",
-        "tarantool/client": "^0.8.0"
+        "tarantool/client": "^0.9.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",
