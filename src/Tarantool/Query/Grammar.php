@@ -138,4 +138,16 @@ class Grammar extends BaseGrammar
 
         return "insert into $table ($columns) values $parameters";
     }
+
+    /**
+     * overrides default wrapUnion function with removing parentheses on union subquery
+     * that is how tarantool union works
+     *
+     * @param  string  $sql
+     * @return string
+     */
+    protected function wrapUnion($sql)
+    {
+        return $sql;
+    }
 }
