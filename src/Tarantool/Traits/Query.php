@@ -10,6 +10,7 @@ use Illuminate\Database\QueryException;
 use Tarantool\Client\Client;
 use Tarantool\Client\SqlQueryResult;
 use Tarantool\Client\SqlUpdateResult;
+use Illuminate\Support\Facades\DB;
 
 trait Query
 {
@@ -138,7 +139,7 @@ trait Query
         // lot more helpful to the developer instead of just the database's errors.
         catch (Exception $e) {
             throw new QueryException(
-                $query, $this->prepareBindings($bindings), $e
+                DB::connection()->getName(), $query, $this->prepareBindings($bindings), $e
             );
         }
 
